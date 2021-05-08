@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: Bank Account API
+  description: simple backend project
+  version: 1
+paths:
+  /balance:
+    get:
+      summary: returns account balance
+      operationId: getBalance
+      parameters:
+        - name: accountNumber
+          required: true
+          in: path
+          description: account number
+          schema:
+            type: string
+      responses:
+        '200':    # status code
+          description: balance
+          content:
+            application/json:
+              schema:
+                type: number
+        '404':
+          description: account number not found
+  /deposit:
+    post:
+      summary: deposit money into account
+      operationId: postDeposit
+      parameters:
+        - name: accountNumber
+          required: true
+          in: path
+          description: account number
+          schema:
+            type: string
+        - name: amount
+          required: true
+          in: path
+          description: amount
+          schema:
+            type: number
+            maximum: 40000
+      responses:
+        '201': # status code
+          description: deposited okay
+        '404':
+          description: account number not found
+        '400':
+          description: invalid deposit
+  /withdraw:
+    post:
+      summary: withdraw from account
+      operationId: postWithdraw
+      parameters:
+        - name: accountNumber
+          required: true
+          in: path
+          description: account number
+          schema:
+            type: string
+        - name: amount
+          required: true
+          in: path
+          description: amount
+          schema:
+            type: number
+            maximum: 50000
+      responses:
+        '201': # status code
+          description: withdrew okay
+        '404':
+          description: account number not found
+        '400':
+          description: invalid withdrawal
+
+
+
