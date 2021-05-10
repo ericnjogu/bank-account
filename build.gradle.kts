@@ -16,11 +16,20 @@ allprojects {
 }
 
 dependencies {
+    implementation(project(":api-spec"))
+
     implementation(kotlin("stdlib"))
     implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation(project(":api-spec"))
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.6.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    implementation("org.projectlombok:lombok:1.18.20")
+    implementation("org.hibernate.validator:hibernate-validator")
+
+    annotationProcessor("org.projectlombok:lombok:1.18.20")
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
+
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.20")
 }
 
 tasks.getByName<Test>("test") {
