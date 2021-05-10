@@ -20,6 +20,7 @@ dependencies {
 
     implementation(kotlin("stdlib"))
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.projectlombok:lombok:1.18.20")
     implementation("org.hibernate.validator:hibernate-validator")
 
