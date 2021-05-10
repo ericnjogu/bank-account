@@ -39,14 +39,18 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("check deposit amount validation")
     void postDeposit_01() throws Exception {
-        mockMvc.perform(post("/account/deposit/ac01/40001"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/account/deposit/ac01/40001")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 
     @Test
     @DisplayName("check withdraw amount validation")
     void postWithdraw_01() throws Exception {
-        mockMvc.perform(post("/account/withdraw/ac01/50001"))
-                .andExpect(status().isBadRequest());
+        mockMvc.perform(post("/account/withdraw/ac01/50001")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 }
