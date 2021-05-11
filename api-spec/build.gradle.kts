@@ -27,7 +27,8 @@ tasks {
             mapOf(
                 "useBeanValidation" to "true",
                 "serializationLibrary" to "jackson",
-                "interfaceOnly" to "true"
+                "interfaceOnly" to "true",
+                "unhandledException" to "true"
             )
         )
     }

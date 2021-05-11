@@ -1,6 +1,7 @@
 package com.enjogu.bank.account.service.impl;
 
 import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.repository.AccountRepository;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ class AccountServiceImplIT {
 
     @Test
     @DisplayName("deposit and get balance for existing account")
-    void getBalance_01() {
+    void getBalance_01() throws NotFoundException {
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("1.2"));
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("2.3"));
         assertEquals(new BigDecimal("3.5"), accountService.getBalance(TEST_ACCOUNT_NUMBER));

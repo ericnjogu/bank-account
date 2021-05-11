@@ -1,5 +1,7 @@
 package com.enjogu.bank.account.service;
 
+import com.enjogu.bank.account.exception.NotFoundException;
+
 import java.math.BigDecimal;
 
 public interface AccountService {
@@ -7,7 +9,7 @@ public interface AccountService {
      * @param accountNumber - account number
      * @return balance
      */
-    BigDecimal getBalance(String accountNumber);
+    BigDecimal getBalance(String accountNumber) throws NotFoundException;
 
     /**
      * @param accountNumber - account number

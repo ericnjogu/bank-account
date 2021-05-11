@@ -1,5 +1,6 @@
 package com.enjogu.bank.account.api;
 
+import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AccountController implements com.enjogu.bank.account.api.AccountApi
     }
 
     @Override
-    public ResponseEntity<BigDecimal> getBalance(String accountNumber) {
+    public ResponseEntity<BigDecimal> getBalance(String accountNumber) throws NotFoundException {
         return ResponseEntity.of(Optional.ofNullable(accountService.getBalance(accountNumber)));
     }
 

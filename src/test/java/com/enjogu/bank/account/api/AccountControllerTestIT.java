@@ -30,11 +30,21 @@ class AccountControllerTestIT {
     }
 
     @Test
+    @DisplayName("get balance should succeed for existing account")
     void getBalance_01() throws Exception {
         mockMvc.perform(get("/account/balance/{account}", TEST_ACCOUNT_NUMBER)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("get balance should return 404 for non-existent account")
+    void getBalance_02() throws Exception {
+        mockMvc.perform(get("/account/balance/{account}", "no-account")
+                .accept(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
     }
 
     @Test

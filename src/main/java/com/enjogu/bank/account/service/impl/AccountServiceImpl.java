@@ -1,6 +1,7 @@
 package com.enjogu.bank.account.service.impl;
 
 import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.repository.AccountRepository;
 import com.enjogu.bank.account.repository.DepositRepository;
 import com.enjogu.bank.account.repository.WithdrawalRepository;
@@ -24,10 +25,14 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
 
     @Override
-    public BigDecimal getBalance(String accountNumber) {
+    public BigDecimal getBalance(String accountNumber) throws NotFoundException{
         log.debug("getBalance {}", accountNumber);
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
-        return optionalAccount.get().getBalance();
+        if (optionalAccount.isPresent()) {
+            return optionalAccount.get().getBalance();
+        } else {
+            throw new NotFoundException(String.format("account '%s' does not exist", accountNumber));
+        }
     }
 
     @Override
