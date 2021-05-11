@@ -20,4 +20,18 @@ public interface AccountService {
      * @param amount - amount
      */
     void withdraw(String accountNumber, BigDecimal amount);
+
+    /**
+     * count today's deposits
+     * @param accountNumber - account number
+     * @return count
+     */
+    Long countTodaysDeposits(String accountNumber);
+
+    /**
+     * count today's withdrawals
+     * @param accountNumber - account number
+     * @return count
+     */
+    Long countTodaysWithdrawals(String accountNumber);
 }

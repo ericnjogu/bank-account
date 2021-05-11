@@ -24,6 +24,7 @@ dependencies {
     implementation("org.projectlombok:lombok:1.18.20")
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.liquibase:liquibase-core")
+    implementation("org.apache.commons:commons-lang3:3.12.0")
 
     annotationProcessor("org.projectlombok:lombok:1.18.20")
 
