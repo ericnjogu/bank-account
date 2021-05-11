@@ -1,4 +1,4 @@
-#Mini Backend Project
+# Mini Backend Project
 This is mini backend project exposes a REST API for a bank account.
 It is written in an API first approach - 
 it implements the REST API in the `api-spec` module.
