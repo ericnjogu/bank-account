@@ -20,8 +20,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
@@ -43,6 +45,23 @@ class AccountServiceImplIT {
         Optional<Account> optionalAccount = accountRepository.findById(TEST_ACCOUNT_ID);
         assertTrue(optionalAccount.isPresent());
         assertEquals(BigDecimal.ZERO, optionalAccount.get().getBalance());
+    }
+
+    @Test
+    void checkAccountTimestamps() {
+        String accountNumber = "new-account-001";
+        Account account = Account.builder()
+                .accountNumber("1827")
+                .accountNumber(accountNumber)
+                .balance(new BigDecimal("3")).build();
+        accountRepository.save(account);
+        Optional<Account> fetchedAccount = accountRepository.findByAccountNumber(accountNumber);
+        if(fetchedAccount.isPresent()) {
+            assertNotNull(fetchedAccount.get().getCreated(), "Created");
+            assertNotNull(fetchedAccount.get().getModified(), "Modified");
+        } else {
+            fail("account is missing");
+        }
     }
 
 
@@ -154,6 +173,31 @@ class AccountServiceImplIT {
         assertThrows(
                 InvalidTransactionException.class,
                 () -> accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("11"))
+        );
+    }
+
+    @Test
+    @DisplayName("daily withdrawals should not exceed configured count")
+    void withdraw_03() throws InvalidTransactionException, NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("1"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("2"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("3"));
+        assertThrows(
+                InvalidTransactionException.class,
+                () -> accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("4"))
+        );
+    }
+
+    @Test
+    @DisplayName("daily withdrawals should not exceed configured total")
+    void withdraw_04() throws InvalidTransactionException, NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("60000"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("20000"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("20000"));
+        assertThrows(
+                InvalidTransactionException.class,
+                () -> accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("15000"))
         );
     }
 }

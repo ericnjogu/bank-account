@@ -1,7 +1,9 @@
 package com.enjogu.bank.account.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +14,9 @@ import java.math.BigDecimal;
 @Setter
 @Entity
 @Table(name = "account")
-public class Account extends BaseEntity{
+@SuperBuilder
+@NoArgsConstructor
+public class Account extends BaseEntity {
     @Column(name = "account_number")
     private String accountNumber;
     private BigDecimal balance;

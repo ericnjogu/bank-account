@@ -1,6 +1,8 @@
 package com.enjogu.bank.account.service.impl;
 
 import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.entity.Deposit;
+import com.enjogu.bank.account.entity.Withdrawal;
 import com.enjogu.bank.account.exception.InvalidTransactionException;
 import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.repository.AccountRepository;
@@ -10,6 +12,7 @@ import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +27,11 @@ public class AccountServiceImpl implements AccountService {
     private final DepositRepository depositRepository;
     private final WithdrawalRepository withdrawalRepository;
     private final AccountRepository accountRepository;
+
+    @Value("${bank.account.withdrawal.daily-count}")
+    private int maxDailyWithdrawalCount;
+    @Value("${bank.account.withdrawal.daily-total}")
+    private BigDecimal maxDailyWithdrawalTotal;
 
     @Override
     public BigDecimal getBalance(String accountNumber) throws NotFoundException{
@@ -42,6 +50,7 @@ public class AccountServiceImpl implements AccountService {
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
         if (optionalAccount.isPresent()) {
             optionalAccount.get().setBalance(optionalAccount.get().getBalance().add(amount));
+            depositRepository.save(Deposit.builder().accountId(optionalAccount.get().getId()).amount(amount).build());
         } else {
             throw new NotFoundException(String.format("account '%s' does not exist", accountNumber));
         }
@@ -49,16 +58,25 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException, InvalidTransactionException {
-        log.debug("deposit {}: {}", accountNumber, amount);
+        log.debug("withdraw {}: {}", accountNumber, amount);
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
         if (optionalAccount.isPresent()) {
-
             BigDecimal balance = optionalAccount.get().getBalance().subtract(amount);
             if (BigDecimal.ZERO.compareTo(balance) > 0) {
                 throw new InvalidTransactionException("balance should not be negative");
-            } else {
-                optionalAccount.get().setBalance(balance);
             }
+            if (countTodaysWithdrawals(accountNumber) >= maxDailyWithdrawalCount) {
+                throw new InvalidTransactionException("daily withdrawal maximum transactions reached");
+            }
+            if (sumTodaysWithdrawals(accountNumber).add(amount).compareTo(maxDailyWithdrawalTotal) >= 0) {
+                throw new InvalidTransactionException("daily withdrawal maximum will be exceeded");
+            }
+            optionalAccount.get().setBalance(balance);
+            withdrawalRepository.save(Withdrawal.builder()
+                .accountId(optionalAccount.get().getId())
+                .amount(amount)
+                .build()
+            );
         } else {
             throw new NotFoundException(String.format("account '%s' does not exist", accountNumber));
         }
@@ -67,25 +85,33 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Long countTodaysDeposits(String accountNumber) {
         ImmutablePair<Date, Date> pair = getDayStartAndEnd();
-        return depositRepository.countCreatedBetween(pair.left, pair.right, accountNumber);
+        Optional<Long> count = depositRepository.countCreatedBetween(pair.left, pair.right, accountNumber);
+        log.debug("deposit count: {}", count);
+        return count.orElse(0L);
     }
 
     @Override
     public Long countTodaysWithdrawals(String accountNumber) {
         ImmutablePair<Date, Date> pair = getDayStartAndEnd();
-        return withdrawalRepository.countCreatedBetween(pair.left, pair.right, accountNumber);
+        Optional<Long> count = withdrawalRepository.countCreatedBetween(pair.left, pair.right, accountNumber);
+        log.debug("withdrawal count: {}", count);
+        return count.orElse(0L);
     }
 
     @Override
     public BigDecimal sumTodaysWithdrawals(String accountNumber) {
         ImmutablePair<Date, Date> pair = getDayStartAndEnd();
-        return withdrawalRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+        Optional<BigDecimal> sum = withdrawalRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+        log.debug("withdrawal sum: {}", sum);
+        return sum.orElse(BigDecimal.ZERO);
     }
 
     @Override
     public BigDecimal sumTodaysDeposits(String accountNumber) {
         ImmutablePair<Date, Date> pair = getDayStartAndEnd();
-        return depositRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+        Optional<BigDecimal> sum = depositRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+        log.debug("deposit sum: {}", sum);
+        return sum.orElse(BigDecimal.ZERO);
     }
 
     /**

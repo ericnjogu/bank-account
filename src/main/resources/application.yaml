@@ -2,12 +2,19 @@ logging:
   level:
     org.springframework.web: DEBUG
     com.enjogu: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 spring:
   liquibase:
     enabled: true
     change-log: classpath:db/db.changelog-master.yaml
-
   jpa:
     hibernate:
       ddl-auto: validate
+
+bank:
+  account:
+    withdrawal:
+      daily-total: 50000
+      daily-count: 3
