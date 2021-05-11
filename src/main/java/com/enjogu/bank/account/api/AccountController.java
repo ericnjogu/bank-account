@@ -28,7 +28,7 @@ public class AccountController implements com.enjogu.bank.account.api.AccountApi
     }
 
     @Override
-    public ResponseEntity<Void> postDeposit(String accountNumber, BigDecimal amount) {
+    public ResponseEntity<Void> postDeposit(String accountNumber, BigDecimal amount) throws NotFoundException {
         accountService.deposit(accountNumber, amount);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

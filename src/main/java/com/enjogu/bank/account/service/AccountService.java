@@ -15,7 +15,7 @@ public interface AccountService {
      * @param accountNumber - account number
      * @param amount - amount
      */
-    void deposit(String accountNumber, BigDecimal amount);
+    void deposit(String accountNumber, BigDecimal amount) throws NotFoundException;
 
     /**
      * @param accountNumber - account number

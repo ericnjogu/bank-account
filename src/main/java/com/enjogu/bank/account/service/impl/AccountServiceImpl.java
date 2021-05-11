@@ -36,10 +36,14 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deposit(String accountNumber, BigDecimal amount) {
+    public void deposit(String accountNumber, BigDecimal amount) throws NotFoundException {
         log.debug("deposit into {}: {}", accountNumber, amount);
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
-        optionalAccount.ifPresent(account -> account.setBalance(account.getBalance().add(amount)));
+        if (optionalAccount.isPresent()) {
+            optionalAccount.get().setBalance(optionalAccount.get().getBalance().add(amount));
+        } else {
+            throw new NotFoundException(String.format("account '%s' does not exist", accountNumber));
+        }
     }
 
     @Override
