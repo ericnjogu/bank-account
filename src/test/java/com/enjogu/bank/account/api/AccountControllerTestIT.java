@@ -74,12 +74,12 @@ class AccountControllerTestIT {
                 .andDo(print());
     }
 
-    /*@Test
+    @Test
     @DisplayName("withdraw should return 404 for non-existent account")
     void postWithdraw_02() throws Exception {
         mockMvc.perform(post("/account/withdraw/ac01/49999")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
-    }*/
+    }
 }

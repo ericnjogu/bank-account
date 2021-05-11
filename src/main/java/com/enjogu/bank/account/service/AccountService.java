@@ -21,7 +21,7 @@ public interface AccountService {
      * @param accountNumber - account number
      * @param amount - amount
      */
-    void withdraw(String accountNumber, BigDecimal amount);
+    void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException;
 
     /**
      * count today's deposits

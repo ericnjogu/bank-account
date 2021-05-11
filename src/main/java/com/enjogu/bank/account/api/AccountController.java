@@ -34,7 +34,7 @@ public class AccountController implements com.enjogu.bank.account.api.AccountApi
     }
 
     @Override
-    public ResponseEntity<Void> postWithdraw(String accountNumber, BigDecimal amount) {
+    public ResponseEntity<Void> postWithdraw(String accountNumber, BigDecimal amount) throws NotFoundException {
         accountService.withdraw(accountNumber, amount);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

@@ -138,7 +138,11 @@ class AccountServiceImplIT {
     }
 
     @Test
-    @Disabled
-    void withdraw() {
+    @DisplayName("withdraw and get balance for existing account")
+    void withdraw_01() throws NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("2"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("7"));
+        assertEquals(new BigDecimal("1"), accountService.getBalance(TEST_ACCOUNT_NUMBER));
     }
 }
