@@ -4,6 +4,7 @@ plugins {
     id("org.openapi.generator")  version "5.1.1" apply false
     id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
+    jacoco
 }
 
 allprojects {
@@ -39,4 +40,9 @@ dependencies {
 
 tasks.getByName<Test>("test") {
     useJUnitPlatform()
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
 }
