@@ -47,6 +47,21 @@ public class AccountServiceImpl implements AccountService {
         return withdrawalRepository.countCreatedBetween(pair.left, pair.right, accountNumber);
     }
 
+    @Override
+    public BigDecimal sumTodaysWithdrawals(String accountNumber) {
+        ImmutablePair<Date, Date> pair = getDayStartAndEnd();
+        return withdrawalRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+    }
+
+    @Override
+    public BigDecimal sumTodaysDeposits(String accountNumber) {
+        ImmutablePair<Date, Date> pair = getDayStartAndEnd();
+        return depositRepository.sumCreatedBetween(pair.left, pair.right, accountNumber);
+    }
+
+    /**
+     * @return dates for the begin and end of today
+     */
     ImmutablePair<Date, Date> getDayStartAndEnd() {
         Calendar now = Calendar.getInstance();
         Calendar cal = Calendar.getInstance();

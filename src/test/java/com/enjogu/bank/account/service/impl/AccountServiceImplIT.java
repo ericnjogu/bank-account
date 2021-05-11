@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
+@Transactional
 class AccountServiceImplIT {
     private final AccountRepository accountRepository;
     private final JdbcTemplate jdbcTemplate;
@@ -87,6 +89,48 @@ class AccountServiceImplIT {
                 Calendar.getInstance().getTime());
 
         assertEquals(2, accountService.countTodaysWithdrawals(TEST_ACCOUNT_NUMBER));
+    }
+
+    @Test
+    @DisplayName("verify today's total deposit total")
+    void sumTodaysDeposits() {
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.DAY_OF_MONTH, -1);
+        // yesterday
+        String sql = "insert into deposit (id, account_id, amount, created) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 10.25, cal.getTime());
+        //future
+        cal.roll(Calendar.DAY_OF_MONTH, 3);
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 10.27, cal.getTime());
+        //current
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 14.43,
+                Calendar.getInstance().getTime());
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), "test_account_2", 10.30,
+                Calendar.getInstance().getTime());
+
+        assertEquals(new BigDecimal("14.43"), accountService.sumTodaysDeposits(TEST_ACCOUNT_NUMBER));
+    }
+
+    @Test
+    @DisplayName("verify today's withdraw total")
+    void sumTodaysWithdrawals() {
+        Calendar cal = Calendar.getInstance();
+        cal.roll(Calendar.DAY_OF_MONTH, -1);
+        // yesterday
+        String sql = "insert into withdrawal (id, account_id, amount, created) values (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 10.25, cal.getTime());
+        //future
+        cal.roll(Calendar.DAY_OF_MONTH, 3);
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 10.27, cal.getTime());
+        //current
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 1,
+                Calendar.getInstance().getTime());
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), TEST_ACCOUNT_ID, 90,
+                Calendar.getInstance().getTime());
+        jdbcTemplate.update(sql, UUID.randomUUID().toString(), "test_account_2", 10.30,
+                Calendar.getInstance().getTime());
+
+        assertEquals(new BigDecimal("91"), accountService.sumTodaysWithdrawals(TEST_ACCOUNT_NUMBER));
     }
 
     @Test

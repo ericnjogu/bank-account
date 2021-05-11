@@ -34,4 +34,16 @@ public interface AccountService {
      * @return count
      */
     Long countTodaysWithdrawals(String accountNumber);
+
+    /**
+     * @param accountNumber - account number
+     * @return sum of todays withdrawals
+     */
+    BigDecimal sumTodaysWithdrawals(String accountNumber);
+
+    /**
+     * @param accountNumber - account number
+     * @return sum of todays deposits
+     */
+    BigDecimal sumTodaysDeposits(String accountNumber);
 }
