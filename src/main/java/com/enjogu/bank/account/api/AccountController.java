@@ -3,6 +3,7 @@ package com.enjogu.bank.account.api;
 import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -29,12 +30,12 @@ public class AccountController implements com.enjogu.bank.account.api.AccountApi
     @Override
     public ResponseEntity<Void> postDeposit(String accountNumber, BigDecimal amount) {
         accountService.deposit(accountNumber, amount);
-        return ResponseEntity.of(Optional.empty());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @Override
     public ResponseEntity<Void> postWithdraw(String accountNumber, BigDecimal amount) {
         accountService.withdraw(accountNumber, amount);
-        return ResponseEntity.of(Optional.empty());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
