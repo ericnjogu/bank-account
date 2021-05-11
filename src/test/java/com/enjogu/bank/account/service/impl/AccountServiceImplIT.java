@@ -64,7 +64,7 @@ class AccountServiceImplIT {
         jdbcTemplate.update(sql, UUID.randomUUID().toString(), "test_account_2", 10.30,
                 Calendar.getInstance().getTime());
 
-        assertEquals(1, accountService.countTodaysDeposits(TEST_ACCOUNT_ID));
+        assertEquals(1, accountService.countTodaysDeposits(TEST_ACCOUNT_NUMBER));
     }
 
     @Test
@@ -86,7 +86,7 @@ class AccountServiceImplIT {
         jdbcTemplate.update(sql, UUID.randomUUID().toString(), "test_account_2", 10.30,
                 Calendar.getInstance().getTime());
 
-        assertEquals(2, accountService.countTodaysWithdrawals(TEST_ACCOUNT_ID));
+        assertEquals(2, accountService.countTodaysWithdrawals(TEST_ACCOUNT_NUMBER));
     }
 
     @Test
