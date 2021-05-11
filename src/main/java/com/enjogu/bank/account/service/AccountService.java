@@ -1,5 +1,6 @@
 package com.enjogu.bank.account.service;
 
+import com.enjogu.bank.account.exception.InvalidTransactionException;
 import com.enjogu.bank.account.exception.NotFoundException;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public interface AccountService {
      * @param accountNumber - account number
      * @param amount - amount
      */
-    void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException;
+    void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException, InvalidTransactionException;
 
     /**
      * count today's deposits

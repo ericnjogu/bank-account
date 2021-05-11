@@ -1,5 +1,6 @@
 package com.enjogu.bank.account.api;
 
+import com.enjogu.bank.account.exception.InvalidTransactionException;
 import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,8 @@ public class AccountController implements com.enjogu.bank.account.api.AccountApi
     }
 
     @Override
-    public ResponseEntity<Void> postWithdraw(String accountNumber, BigDecimal amount) throws NotFoundException {
+    public ResponseEntity<Void> postWithdraw(String accountNumber, BigDecimal amount)
+            throws NotFoundException, InvalidTransactionException {
         accountService.withdraw(accountNumber, amount);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

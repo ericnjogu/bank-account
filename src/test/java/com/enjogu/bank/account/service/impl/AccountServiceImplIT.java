@@ -1,12 +1,12 @@
 package com.enjogu.bank.account.service.impl;
 
 import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.exception.InvalidTransactionException;
 import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.repository.AccountRepository;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +20,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -139,10 +140,20 @@ class AccountServiceImplIT {
 
     @Test
     @DisplayName("withdraw and get balance for existing account")
-    void withdraw_01() throws NotFoundException {
+    void withdraw_01() throws NotFoundException, InvalidTransactionException {
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
         accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("2"));
         accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("7"));
         assertEquals(new BigDecimal("1"), accountService.getBalance(TEST_ACCOUNT_NUMBER));
+    }
+
+    @Test
+    @DisplayName("balance should not go below zero")
+    void withdraw_02() throws NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
+        assertThrows(
+                InvalidTransactionException.class,
+                () -> accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("11"))
+        );
     }
 }

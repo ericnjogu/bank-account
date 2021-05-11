@@ -19,4 +19,9 @@ public class GlobalExceptionHandler {
     ResponseEntity<?> handleNotFoundErrors(NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+
+    @ExceptionHandler
+    ResponseEntity<?> handleInvalidTransactionErrors(InvalidTransactionException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exception.getMessage());
+    }
 }

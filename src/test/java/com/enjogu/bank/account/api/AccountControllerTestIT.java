@@ -82,4 +82,13 @@ class AccountControllerTestIT {
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
+
+    @Test
+    @DisplayName("withdraw should return 403 for withdrawals that could cause negative balance")
+    void postWithdraw_03() throws Exception {
+        mockMvc.perform(post("/account/withdraw/{account}/1", TEST_ACCOUNT_NUMBER)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
 }

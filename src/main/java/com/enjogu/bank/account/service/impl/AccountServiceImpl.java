@@ -1,6 +1,7 @@
 package com.enjogu.bank.account.service.impl;
 
 import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.exception.InvalidTransactionException;
 import com.enjogu.bank.account.exception.NotFoundException;
 import com.enjogu.bank.account.repository.AccountRepository;
 import com.enjogu.bank.account.repository.DepositRepository;
@@ -47,11 +48,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException {
+    public void withdraw(String accountNumber, BigDecimal amount) throws NotFoundException, InvalidTransactionException {
         log.debug("deposit {}: {}", accountNumber, amount);
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
         if (optionalAccount.isPresent()) {
-            optionalAccount.get().setBalance(optionalAccount.get().getBalance().subtract(amount));
+
+            BigDecimal balance = optionalAccount.get().getBalance().subtract(amount);
+            if (BigDecimal.ZERO.compareTo(balance) > 0) {
+                throw new InvalidTransactionException("balance should not be negative");
+            } else {
+                optionalAccount.get().setBalance(balance);
+            }
         } else {
             throw new NotFoundException(String.format("account '%s' does not exist", accountNumber));
         }
