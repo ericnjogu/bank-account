@@ -3,7 +3,6 @@ package com.enjogu.bank.account.api;
 import com.enjogu.bank.account.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,15 @@ class AccountControllerTestIT {
     private final AccountService accountService;
     private final MockMvc mockMvc;
 
+    private static final String TEST_ACCOUNT_NUMBER = "2342";
+
     @BeforeEach
     void setUp() {
     }
 
     @Test
     void getBalance_01() throws Exception {
-        mockMvc.perform(get("/account/balance/ac90")
+        mockMvc.perform(get("/account/balance/{account}", TEST_ACCOUNT_NUMBER)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
