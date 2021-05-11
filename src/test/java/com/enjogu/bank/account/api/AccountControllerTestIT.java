@@ -77,7 +77,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("withdraw should return 404 for non-existent account")
     void postWithdraw_02() throws Exception {
-        mockMvc.perform(post("/account/withdraw/ac01/49999")
+        mockMvc.perform(post("/account/withdraw/ac01/1500")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
