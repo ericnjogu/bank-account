@@ -3,6 +3,9 @@ This is mini backend project exposes a REST API for a bank account.
 It is written in an API first approach - 
 it implements the REST API in the `api-spec` module.
 
+It is created with spring boot and uses gradle for the build system.
+An in-memory H2 database is used for testing and running the app.
+
 ## Setup
 - Clone this project
 - Run the following commands to download dependencies and start the application.
@@ -14,6 +17,8 @@ it implements the REST API in the `api-spec` module.
 
 ## Automated Tests
 `./gradlew test`
+
+To view the coverage reports, open `build/reports/jacoco/test/html/index.html`
   
 ## Functional Testing
 The app has a default account which has the account number `2342`.
