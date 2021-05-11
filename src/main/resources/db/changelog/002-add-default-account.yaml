@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-add-default-account
+      author: Eric Njogu <kunadawa@gmail.com>
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/002-add-default-account.sql

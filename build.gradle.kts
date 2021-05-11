@@ -23,8 +23,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.projectlombok:lombok:1.18.20")
     implementation("org.hibernate.validator:hibernate-validator")
+    implementation("org.liquibase:liquibase-core")
 
     annotationProcessor("org.projectlombok:lombok:1.18.20")
+
+    runtimeOnly("com.h2database:h2")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")

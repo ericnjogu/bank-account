@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-schema
+      author: Eric Njogu <kunadawa@gmail.com>
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: created
+                  type: timestamp
+                  constraints:
+                    nullable: true
+              - column:
+                  name: modified
+                  type: datetime
+                  constraints:
+                    nullable: true
+              - column:
+                  name: account_number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: balance
+                  type: decimal
+                  defaultValue: 0
+                  constraints:
+                      nullable: false
+        - createTable:
+            tableName: withdrawal
+            columns: &txcols
+              - column:
+                  name: id
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: created
+                  type: datetime
+                  constraints:
+                    nullable: true
+              - column:
+                  name: modified
+                  type: datetime
+                  constraints:
+                    nullable: true
+              - column:
+                  name: account_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: decimal
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: deposit
+            columns: *txcols
