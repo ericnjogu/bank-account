@@ -32,7 +32,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("get balance should succeed for existing account")
     void getBalance_01() throws Exception {
-        mockMvc.perform(get("/account/balance/{account}", TEST_ACCOUNT_NUMBER)
+        mockMvc.perform(get("/account/{account}/balance", TEST_ACCOUNT_NUMBER)
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());
@@ -41,7 +41,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("get balance should return 404 for non-existent account")
     void getBalance_02() throws Exception {
-        mockMvc.perform(get("/account/balance/{account}", "no-account")
+        mockMvc.perform(get("/account/{account}/balance", "no-account")
                 .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isNotFound());
@@ -50,7 +50,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("check deposit amount validation")
     void postDeposit_01() throws Exception {
-        mockMvc.perform(post("/account/deposit/ac01/40001")
+        mockMvc.perform(post("/account/ac01/deposit/40001")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
@@ -59,7 +59,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("deposit should return 404 for non-existent account")
     void postDeposit_02() throws Exception {
-        mockMvc.perform(post("/account/deposit/ac01/39999")
+        mockMvc.perform(post("/account/ac01/deposit/39999")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -68,7 +68,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("check withdraw amount validation")
     void postWithdraw_01() throws Exception {
-        mockMvc.perform(post("/account/withdraw/ac01/50001")
+        mockMvc.perform(post("/account/ac01/withdraw/50001")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
@@ -77,7 +77,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("withdraw should return 404 for non-existent account")
     void postWithdraw_02() throws Exception {
-        mockMvc.perform(post("/account/withdraw/ac01/1500")
+        mockMvc.perform(post("/account/ac01/withdraw/1500")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andDo(print());
@@ -86,7 +86,7 @@ class AccountControllerTestIT {
     @Test
     @DisplayName("withdraw should return 403 for withdrawals that could cause negative balance")
     void postWithdraw_03() throws Exception {
-        mockMvc.perform(post("/account/withdraw/{account}/1", TEST_ACCOUNT_NUMBER)
+        mockMvc.perform(post("/account/{account}/withdraw/1", TEST_ACCOUNT_NUMBER)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andDo(print());

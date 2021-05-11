@@ -4,7 +4,7 @@ info:
   description: simple backend project
   version: 1
 paths:
-  /account/balance/{accountNumber}:
+  /account/{accountNumber}/balance:
     get:
       summary: returns account balance
       operationId: getBalance
@@ -24,7 +24,7 @@ paths:
                 type: number
         '404':
           description: account number not found
-  /account/deposit/{accountNumber}/{amount}:
+  /account/{accountNumber}/deposit/{amount}:
     post:
       summary: deposit money into account
       operationId: postDeposit
@@ -49,7 +49,7 @@ paths:
           description: account number not found
         '400':
           description: invalid deposit
-  /account/withdraw/{accountNumber}/{amount}:
+  /account/{accountNumber}/withdraw/{amount}:
     post:
       summary: withdraw from account
       operationId: postWithdraw
