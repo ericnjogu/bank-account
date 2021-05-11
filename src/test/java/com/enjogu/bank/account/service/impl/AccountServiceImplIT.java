@@ -67,7 +67,7 @@ class AccountServiceImplIT {
 
     @Test
     @DisplayName("deposit and get balance for existing account")
-    void getBalance_01() throws NotFoundException {
+    void getBalance_01() throws NotFoundException, InvalidTransactionException {
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("1.2"));
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("2.3"));
         assertEquals(new BigDecimal("3.5"), accountService.getBalance(TEST_ACCOUNT_NUMBER));
@@ -168,7 +168,7 @@ class AccountServiceImplIT {
 
     @Test
     @DisplayName("balance should not go below zero")
-    void withdraw_02() throws NotFoundException {
+    void withdraw_02() throws NotFoundException, InvalidTransactionException {
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
         assertThrows(
                 InvalidTransactionException.class,
@@ -198,6 +198,31 @@ class AccountServiceImplIT {
         assertThrows(
                 InvalidTransactionException.class,
                 () -> accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("15000"))
+        );
+    }
+
+    @Test
+    @DisplayName("daily deposits should not exceed configured count")
+    void deposit_01() throws InvalidTransactionException, NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("1"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("2"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("7"));
+        assertThrows(
+                InvalidTransactionException.class,
+                () -> accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("4"))
+        );
+    }
+
+    @Test
+    @DisplayName("daily deposits should not exceed configured total")
+    void deposit_02() throws InvalidTransactionException, NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("60000"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("20000"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("20000"));
+        assertThrows(
+                InvalidTransactionException.class,
+                () -> accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("51000"))
         );
     }
 }

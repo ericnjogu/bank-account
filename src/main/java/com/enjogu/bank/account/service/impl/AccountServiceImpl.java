@@ -32,6 +32,10 @@ public class AccountServiceImpl implements AccountService {
     private int maxDailyWithdrawalCount;
     @Value("${bank.account.withdrawal.daily-total}")
     private BigDecimal maxDailyWithdrawalTotal;
+    @Value("${bank.account.deposit.daily-count}")
+    private int maxDailyDepositCount;
+    @Value("${bank.account.deposit.daily-total}")
+    private BigDecimal maxDailyDepositTotal;
 
     @Override
     public BigDecimal getBalance(String accountNumber) throws NotFoundException{
@@ -45,10 +49,16 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void deposit(String accountNumber, BigDecimal amount) throws NotFoundException {
+    public void deposit(String accountNumber, BigDecimal amount) throws NotFoundException, InvalidTransactionException {
         log.debug("deposit into {}: {}", accountNumber, amount);
         Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
         if (optionalAccount.isPresent()) {
+            if (countTodaysDeposits(accountNumber) == maxDailyDepositCount) {
+                throw new InvalidTransactionException("daily deposit maximum transactions reached");
+            }
+            if (sumTodaysDeposits(accountNumber).add(amount).compareTo(maxDailyDepositTotal) >= 0) {
+                throw new InvalidTransactionException("daily deposit maximum will be exceeded");
+            }
             optionalAccount.get().setBalance(optionalAccount.get().getBalance().add(amount));
             depositRepository.save(Deposit.builder().accountId(optionalAccount.get().getId()).amount(amount).build());
         } else {
