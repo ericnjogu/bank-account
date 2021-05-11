@@ -8,7 +8,7 @@ An in-memory H2 database is used for testing and running the app.
 
 ## Setup
 - Clone this project
-- Run the following commands to download dependencies and start the application.
+- Run the following commands to download dependencies and build the application.
   ```commandline
     ./gradlew clean build
   
