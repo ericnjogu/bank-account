@@ -1,6 +1,7 @@
 package com.enjogu.bank.account.service.impl;
 
-import com.enjogu.bank.account.entity.Withdrawal;
+import com.enjogu.bank.account.entity.Account;
+import com.enjogu.bank.account.repository.AccountRepository;
 import com.enjogu.bank.account.repository.DepositRepository;
 import com.enjogu.bank.account.repository.WithdrawalRepository;
 import com.enjogu.bank.account.service.AccountService;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,15 +21,20 @@ import java.util.Date;
 public class AccountServiceImpl implements AccountService {
     private final DepositRepository depositRepository;
     private final WithdrawalRepository withdrawalRepository;
+    private final AccountRepository accountRepository;
+
     @Override
     public BigDecimal getBalance(String accountNumber) {
         log.debug("getBalance {}", accountNumber);
-        return BigDecimal.ZERO;
+        Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
+        return optionalAccount.get().getBalance();
     }
 
     @Override
     public void deposit(String accountNumber, BigDecimal amount) {
-        log.debug("deposit {}: {}", accountNumber, amount);
+        log.debug("deposit into {}: {}", accountNumber, amount);
+        Optional<Account> optionalAccount = accountRepository.findByAccountNumber(accountNumber);
+        optionalAccount.ifPresent(account -> account.setBalance(account.getBalance().add(amount)));
     }
 
     @Override

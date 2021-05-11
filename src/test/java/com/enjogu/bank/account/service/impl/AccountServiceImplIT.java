@@ -45,8 +45,11 @@ class AccountServiceImplIT {
 
 
     @Test
-    @Disabled
-    void getBalance() {
+    @DisplayName("deposit and get balance for existing account")
+    void getBalance_01() {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("1.2"));
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("2.3"));
+        assertEquals(new BigDecimal("3.5"), accountService.getBalance(TEST_ACCOUNT_NUMBER));
     }
 
     @Test
