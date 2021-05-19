@@ -18,17 +18,16 @@ An in-memory H2 database is used for testing and running the app.
 `./gradlew bootRun`
 
 ### `jar`
-  ```commandline
-    ./gradlew clean build
-    java -jar build/libs/bank-account-backend-1.0-SNAPSHOT.jar
-  ```
+```commandline
+./gradlew clean build
+java -jar build/libs/bank-account-backend-1.0-SNAPSHOT.jar
+```
 
 ### `docker`
- - `./gradlew jibDockerBuild`
- - go to the local docker dashboard and search for `bank-account-backend` in `images`
- - run the image 
- 
-   ` docker run -i -p:8080:8080 --rm bank-account-backend:1.0-SNAPSHOT`
+```commandline
+./gradlew jibDockerBuild
+docker run -i -p:8080:8080 --rm bank-account-backend:1.0-SNAPSHOT
+```
   
     
 ## Automated Tests
