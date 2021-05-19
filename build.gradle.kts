@@ -5,6 +5,7 @@ plugins {
     id("org.springframework.boot") version "2.4.5"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
     jacoco
+    id("com.google.cloud.tools.jib") version "3.0.0"
 }
 
 allprojects {
@@ -45,4 +46,10 @@ tasks.getByName<Test>("test") {
 
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
+}
+
+jib {
+    container {
+        ports = listOf("8080")
+    }
 }
