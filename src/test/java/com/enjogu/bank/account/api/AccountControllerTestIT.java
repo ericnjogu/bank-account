@@ -48,9 +48,27 @@ class AccountControllerTestIT {
     }
 
     @Test
-    @DisplayName("check deposit amount validation")
+    @DisplayName("check deposit amount max validation")
     void postDeposit_01() throws Exception {
         mockMvc.perform(post("/account/ac01/deposit/40001")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("deposit amount should not be zero")
+    void postDeposit_03() throws Exception {
+        mockMvc.perform(post("/account/2342/deposit/0")
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("deposit amount should not be negative")
+    void postDeposit_04() throws Exception {
+        mockMvc.perform(post("/account/2342/deposit/-3000")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andDo(print());

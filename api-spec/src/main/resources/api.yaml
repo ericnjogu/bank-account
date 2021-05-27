@@ -42,6 +42,7 @@ paths:
           schema:
             type: number
             maximum: 40000
+            minimum: 1
       responses:
         '201': # status code
           description: deposited okay
