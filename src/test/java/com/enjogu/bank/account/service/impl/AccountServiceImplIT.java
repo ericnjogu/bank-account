@@ -202,6 +202,13 @@ class AccountServiceImplIT {
     }
 
     @Test
+    @DisplayName("daily withdrawals can equal configured total")
+    void withdraw_05() throws InvalidTransactionException, NotFoundException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("60000"));
+        accountService.withdraw(TEST_ACCOUNT_NUMBER, new BigDecimal("50000"));
+    }
+
+    @Test
     @DisplayName("daily deposits should not exceed configured count")
     void deposit_01() throws InvalidTransactionException, NotFoundException {
         accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("10"));
