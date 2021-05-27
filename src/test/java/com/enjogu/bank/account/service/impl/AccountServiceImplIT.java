@@ -225,4 +225,10 @@ class AccountServiceImplIT {
                 () -> accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("51000"))
         );
     }
+
+    @Test
+    @DisplayName("daily deposits can equal configured total")
+    void deposit_03() throws NotFoundException, InvalidTransactionException {
+        accountService.deposit(TEST_ACCOUNT_NUMBER, new BigDecimal("150000"));
+    }
 }

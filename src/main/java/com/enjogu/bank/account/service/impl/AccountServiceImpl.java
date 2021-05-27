@@ -56,7 +56,7 @@ public class AccountServiceImpl implements AccountService {
             if (countTodaysDeposits(accountNumber) == maxDailyDepositCount) {
                 throw new InvalidTransactionException("daily deposit maximum transactions reached");
             }
-            if (sumTodaysDeposits(accountNumber).add(amount).compareTo(maxDailyDepositTotal) >= 0) {
+            if (sumTodaysDeposits(accountNumber).add(amount).compareTo(maxDailyDepositTotal) > 0) {
                 throw new InvalidTransactionException("daily deposit maximum will be exceeded");
             }
             optionalAccount.get().setBalance(optionalAccount.get().getBalance().add(amount));
